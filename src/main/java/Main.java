@@ -3,15 +3,26 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Locale;
 
 
 public class Main {
+    //database connection
+    String url = "jdbc:mysql://localhost:3306/nazwa_bazy_danych";
+    String user = "nazwa_użytkownika";
+    String password = "hasło";
+
+    try (Connection conn = DriverManager.getConnection(url, user, password)) {
+
+    } catch (SQLException e) {
+        // Obsługa błędów związanych z połączeniem z bazą danych
+        e.printStackTrace();
+    }
+
     private Species species;
     private Observation observation;
     private Year year;
-// lol
-    public Main() {}
+
+    public Main() throws SQLException {}
 
     public void search() {
         System.out.println("Searching...");
