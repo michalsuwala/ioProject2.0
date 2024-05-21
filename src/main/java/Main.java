@@ -7,7 +7,7 @@ public class Main {
     private static final String USER = "avnadmin";
     private static final String PASSWORD = "AVNS_LVSPr5wWYAjnOI2XT_0";
 
-    // Pole przechowujące połączenie
+
     private static Connection conn;
 
     // Konstruktor klasy
