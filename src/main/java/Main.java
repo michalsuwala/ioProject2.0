@@ -38,7 +38,8 @@ public class Main {
             e.printStackTrace();
         }
         //Observer.addObserver("testowy1");
-        Species.addSpecies("test", "testopistest");
+        //Species.addSpecies("test", "testopistest");
+        Individual.addIndividual(1, "test");
     }
 
     public void search() {
