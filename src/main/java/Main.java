@@ -16,7 +16,7 @@ public class Main {
         conn = DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         try {
             // Tworzenie instancji klasy Main
             Main main = new Main();
@@ -37,7 +37,8 @@ public class Main {
             // Obsługa błędów związanych z połączeniem z bazą danych
             e.printStackTrace();
         }
-        Observer.addObserver("testowy1");
+        //Observer.addObserver("testowy1");
+        Species.addSpecies("test", "testopistest");
     }
 
     public void search() {
