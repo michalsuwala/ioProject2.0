@@ -1,3 +1,7 @@
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class Observer {
     private String name;
     private int id;
@@ -7,7 +11,31 @@ public class Observer {
         return "";
     }
 
-    public void addObserver(String name, int id) {
-        System.out.println("Adding observer: " + name + " with ID: " + id);
+    public static void addObserver(String name) {
+        //check if observer with that name already exists
+        //if not add it to a database
+        //if it exists throw a error message
+
+        String checkIfObserverExists = String.format("SELECT EXISTS(SELECT * FROM database.Observer WHERE name = '%s') AS \"EXISTS\"", name);
+        try (Statement stmt = Main.conn.createStatement();
+             ResultSet rs = stmt.executeQuery(checkIfObserverExists)) {
+                rs.next(); //przesunięcie na pierwszy wiersz
+                boolean observerExists = rs.getBoolean("EXISTS");
+
+                if(!observerExists) {
+                    String insertObserverDataToDB = "INSERT INTO database.Observer (observer_id, name) SELECT MAX(observer_id) + 1, '"+ name +"' FROM database.Observer;";
+                    int affectedRows = stmt.executeUpdate(insertObserverDataToDB);
+                    if(affectedRows > 0) {
+                        System.out.println("Observer has been added to database: " + name );
+                    } else {
+                        System.out.println("Failed to add observer: " + name);
+                    }
+
+                } else {
+                    System.out.println("Observer already exists: " + name);
+                }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

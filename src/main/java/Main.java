@@ -8,7 +8,7 @@ public class Main {
     private static final String PASSWORD = "AVNS_LVSPr5wWYAjnOI2XT_0";
 
 
-    private static Connection conn;
+    static Connection conn;
 
     // Konstruktor klasy
     public Main() throws SQLException {
@@ -37,6 +37,7 @@ public class Main {
             // Obsługa błędów związanych z połączeniem z bazą danych
             e.printStackTrace();
         }
+        Observer.addObserver("testowy1");
     }
 
     public void search() {
