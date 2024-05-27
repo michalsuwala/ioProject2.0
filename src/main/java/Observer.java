@@ -12,10 +12,6 @@ public class Observer {
     }
 
     public static void addObserver(String name) {
-        //check if observer with that name already exists
-        //if not add it to a database
-        //if it exists throw a error message
-
         String checkIfObserverExists = String.format("SELECT EXISTS(SELECT * FROM database.Observer WHERE name = '%s') AS \"EXISTS\"", name);
         try (Statement stmt = Main.conn.createStatement();
              ResultSet rs = stmt.executeQuery(checkIfObserverExists)) {
@@ -30,7 +26,6 @@ public class Observer {
                     } else {
                         System.out.println("Failed to add observer: " + name);
                     }
-
                 } else {
                     System.out.println("Observer already exists: " + name);
                 }

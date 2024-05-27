@@ -1,9 +1,6 @@
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Date;
+import java.sql.*;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -30,7 +27,8 @@ public class Main {
                 System.out.println("1. Add observation");
                 System.out.println("2. Get observation");
                 System.out.println("3. Get years with count of a species");
-                System.out.println("4. Exit");
+                System.out.println("4. Search");
+                System.out.println("5. Exit");
 
                 String input = scanner.nextLine();
                 if (Objects.equals(input, "1")) {
@@ -66,7 +64,12 @@ public class Main {
 
                     // Get years with count of the specified species
                     year.getYearsWithSpeciesCount(speciesId);
-                }else if (Objects.equals(input, "4")) {
+                } else if (Objects.equals(input, "4")) {
+                    System.out.println("[1] Species");
+                    System.out.println("[2] Observers");
+                    int pickedSearchOption = Integer.parseInt(scanner.nextLine());
+                    search(pickedSearchOption);
+                } else if (Objects.equals(input, "5")) {
                     System.out.println("Exiting...");
                     break;
                 } else {
@@ -75,11 +78,113 @@ public class Main {
             }
 
             conn.close();
-
+            scanner.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public static void search(int option) {
+        if (option == 1) {
+            listSpecies();
+        } else if (option == 2) {
+            listObservers();
+        }
+    }
+
+    public static void listSpecies() {
+        Scanner scanner = new Scanner(System.in);
+        String query = "SELECT species_id, name FROM Species ORDER BY species_id";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            System.out.println("List of all species:");
+            while (rs.next()) {
+                int id = rs.getInt("species_id");
+                String name = rs.getString("name");
+                System.out.println("ID: " + id + ", Name: " + name);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching species data: " + e.getMessage());
+            return;
+        }
+        System.out.println("Choose an option:");
+        System.out.println("1. Pick a species");
+        System.out.println("2. Back to main menu");
+        String searchinput = scanner.nextLine();
+        if (Objects.equals(searchinput, "1")) {
+            pickSpecies();
+        } else if (Objects.equals(searchinput, "2")) {
+            return;
+        }
+    }
+
+    public static void pickSpecies() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the species ID:");
+        try {
+            int speciesId = Integer.parseInt(scanner.nextLine());
+            Species s = Species.getSpecies(speciesId);
+            if (s != null) {
+                System.out.println("ID: " + s.id + ", Name: " + s.name + ", Description: " + s.description);
+                while (true) {
+                    System.out.println("Choose an option:");
+                    System.out.println("1. List of individuals");
+                    System.out.println("2. Back to main menu");
+                    int inputInsideSpecies = Integer.parseInt(scanner.nextLine());
+                    if (inputInsideSpecies == 1) {
+                        listIndividuals(speciesId);
+                    } else if (inputInsideSpecies == 2) {
+                        return;
+                    } else {
+                        System.out.println("Invalid option. Please try again.");
+                    }
+                }
+            } else {
+                System.out.println("Species not found.");
+            }
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid input. Please enter a valid species ID.");
+        }
+    }
+
+    public static void listIndividuals(int speciesId) {
+        Scanner scanner = new Scanner(System.in);
+        String individualQuery = "SELECT individual_id, description FROM Individual WHERE species_id = " + speciesId + " ORDER BY individual_id";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(individualQuery)) {
+            System.out.println("List of all individuals:");
+            while (rs.next()) {
+                int individual_id = rs.getInt("individual_id");
+                String desc = rs.getString("description");
+                System.out.println("ID: " + individual_id + ", Desc: " + desc);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching individual data: " + e.getMessage());
+        }
+        System.out.println("Choose an option:");
+        System.out.println("1. Back to previous menu");
+        int input = Integer.parseInt(scanner.nextLine());
+        if (input == 1) {
+            return;
+        } else if (input != 1) {
+            System.out.println("Invalid option. Please try again.");
+        }
+    }
+
+    public static void listObservers() {
+        String query = "SELECT observer_id, name FROM Observer ORDER BY observer_id";
+        try (Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            System.out.println("List of all observers:");
+            while (rs.next()) {
+                int id = rs.getInt("observer_id");
+                String name = rs.getString("name");
+                System.out.println("ID: " + id + ", Name: " + name);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching observer data: " + e.getMessage());
+        }
+    }
+
 }
 
