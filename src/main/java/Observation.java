@@ -12,7 +12,6 @@ public class Observation {
 
     public void addObservation(int observation_id, int species_id, int individual_id, int observer_id, int year_id, Date date) {
         try (Statement stmt = Main.conn.createStatement()) {
-            // Check and add observer if not exists
             String checkIfObserverExists = String.format("SELECT EXISTS(SELECT * FROM database.Observer WHERE observer_id = %d) AS \"EXISTS\"", observer_id);
             ResultSet rsObserver = stmt.executeQuery(checkIfObserverExists);
             rsObserver.next();
@@ -32,7 +31,6 @@ public class Observation {
                 System.out.println("New species added with ID: " + species_id);
             }
 
-            // Check and add individual if not exists
             String checkIfIndividualExists = String.format("SELECT EXISTS(SELECT * FROM database.Individual WHERE individual_id = %d) AS \"EXISTS\"", individual_id);
             ResultSet rsIndividual = stmt.executeQuery(checkIfIndividualExists);
             rsIndividual.next();
@@ -42,7 +40,6 @@ public class Observation {
                 System.out.println("New individual added with ID: " + individual_id);
             }
 
-            // Check and add year if not exists
             String checkIfYearExists = String.format("SELECT EXISTS(SELECT * FROM database.Year WHERE year_id = %d) AS \"EXISTS\"", year_id);
             ResultSet rsYear = stmt.executeQuery(checkIfYearExists);
             rsYear.next();
@@ -52,7 +49,6 @@ public class Observation {
                 System.out.println("New year added with ID: " + year_id);
             }
 
-            // Check if the observation already exists
             String checkIfObservationExists = String.format(
                     "SELECT EXISTS(SELECT * FROM database.Observation WHERE observation_id = %d) AS \"EXISTS\"", observation_id);
             ResultSet rsObservation = stmt.executeQuery(checkIfObservationExists);
@@ -92,7 +88,6 @@ public class Observation {
                 int year_id = rs.getInt("year_id");
                 Date date = rs.getDate("date");
 
-                // Fetch related details
                 String observerName = getObserverName(observer_id);
                 String speciesDetails = getSpeciesDetails(species_id);
                 String individualDetails = getIndividualDetails(individual_id);
@@ -108,7 +103,6 @@ public class Observation {
         }
     }
 
-    // Helper methods to fetch related details
     private String getObserverName(int observer_id) {
         String query = String.format("SELECT name FROM database.Observer WHERE observer_id = %d", observer_id);
         try (Statement stmt = Main.conn.createStatement();

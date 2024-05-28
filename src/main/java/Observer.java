@@ -15,7 +15,7 @@ public class Observer {
         String checkIfObserverExists = String.format("SELECT EXISTS(SELECT * FROM database.Observer WHERE name = '%s') AS \"EXISTS\"", name);
         try (Statement stmt = Main.conn.createStatement();
              ResultSet rs = stmt.executeQuery(checkIfObserverExists)) {
-                rs.next(); //przesunięcie na pierwszy wiersz
+                rs.next();
                 boolean observerExists = rs.getBoolean("EXISTS");
 
                 if(!observerExists) {

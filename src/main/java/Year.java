@@ -4,8 +4,9 @@ public class Year {
     private int year;
     private int year_id;
 
+    private Species species;
 
-    // Method to retrieve a year from the database by its number
+
     public String getYear(int number) {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://mysql-20e7b509-sliwinski-69d4.k.aivencloud.com:24502/database?ssl-mode=REQUIRED", "avnadmin", "AVNS_LVSPr5wWYAjnOI2XT_0")) {
             String query = "SELECT * FROM database.Year WHERE year = ?";
@@ -36,14 +37,12 @@ public class Year {
             boolean yearExists = rsYear.getBoolean("EXISTS");
 
             if (!yearExists) {
-                // Check if a default species exists, or add a new one if it doesn't
                 int defaultSpeciesId = getDefaultSpeciesId(conn, stmt);
                 if (defaultSpeciesId == -1) {
                     defaultSpeciesId = addDefaultSpecies(conn, stmt);
                 }
 
                 if (defaultSpeciesId != -1) {
-                    // Insert the new year into the database with the default species ID
                     String insertYearToDB = String.format("INSERT INTO database.Year (year, Species_species_id) VALUES (%d, %d)", number, defaultSpeciesId);
                     int affectedRows = stmt.executeUpdate(insertYearToDB);
                     if (affectedRows > 0) {

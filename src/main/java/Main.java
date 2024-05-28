@@ -7,17 +7,14 @@ import java.util.Scanner;
 import static java.lang.System.in;
 
 public class Main {
-    // Database connection instance
     public static Connection conn;
 
     public static void main(String[] args) {
-        // Initialize the database connection
         try {
             final String URL = "jdbc:mysql://mysql-20e7b509-sliwinski-69d4.k.aivencloud.com:24502/database?ssl-mode=REQUIRED";
             final String USER = "avnadmin";
             final String PASSWORD = "AVNS_LVSPr5wWYAjnOI2XT_0";
             conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            // Create an instance of the Observation class
 
             Observation observation = new Observation();
             Year year = new Year();
@@ -60,9 +57,8 @@ public class Main {
                 } else if (Objects.equals(input, "3")) {
                     System.out.println("Enter species ID:");
                     int speciesId = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline character
+                    scanner.nextLine();
 
-                    // Get years with count of the specified species
                     year.getYearsWithSpeciesCount(speciesId);
                 } else if (Objects.equals(input, "4")) {
                     System.out.println("[1] Species");

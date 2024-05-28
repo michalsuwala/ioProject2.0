@@ -5,7 +5,7 @@ import java.sql.Statement;
 public class Individual {
     public String getIndividual(int id) {
         System.out.println("Getting individual with ID: " + id);
-        return ""; // Placeholder return value
+        return "";
     }
 
     public static void addIndividual(int SpeciesId, String description) throws SQLException {
